@@ -19,7 +19,7 @@ function createNewNote(body, noteArray) {
 
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes }, null, 2)
+        JSON.stringify({ notes: noteArray }, null, 2)
     );
     return note;
 }
@@ -34,18 +34,18 @@ function findById(id, noteArray) {
 app.get('/api/notes', (req, res) => {
     res.json(notes);
 });
-
-// for html
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/notes.html')) 
-});
-app.get('/notes/:id', (req, res) => {
+app.get('/api/notes/:id', (req, res) => {
     const result = findById(req.params.id, notes);
     if (result) {
         res.json(result);
     } else {
         res.send(404);
     }
+});
+
+// for html
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html')) 
 });
 
 app.get('/*', (req, res) => {

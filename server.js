@@ -4,8 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const { notes } = require('./db/db.json');
 
-
-
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -13,6 +11,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//function start
 function createNewNote(body, noteArray) {
     let note = body;
     noteArray.push(note);
@@ -28,6 +27,7 @@ function findById(id, noteArray) {
     const result = noteArray.filter(note => note.id === id)[0];
     return result;
 }
+//function end
 
 // route start
 // for /api/
@@ -62,9 +62,6 @@ app.post('/api/notes', (req, res) => {
 
 //route end
 
-
-
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
 });
-//58f5584kln7niu2

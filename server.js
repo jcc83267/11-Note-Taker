@@ -27,6 +27,23 @@ function findById(id, noteArray) {
     const result = noteArray.filter(note => note.id === id)[0];
     return result;
 }
+
+function deleteNote(id, noteArray) {
+    //to return index
+    const itemToRemoveIndex = noteArray.findIndex(function(notes) {
+        return notes.id === id;
+    });
+      
+    // proceed to remove an item only if it exists.
+    if(itemToRemoveIndex !== -1){
+        noteArray.splice(itemToRemoveIndex, 1);
+    }
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ notes: noteArray }, null, 2)
+    );
+    return noteArray;
+}
 //function end
 
 // route start
@@ -34,8 +51,9 @@ function findById(id, noteArray) {
 app.get('/api/notes', (req, res) => {
     res.json(notes);
 });
+
 app.get('/api/notes/:id', (req, res) => {
-    const result = findById(req.params.id, notes);
+    let result = findById(req.params.id, notes);
     if (result) {
         res.json(result);
     } else {
@@ -43,9 +61,9 @@ app.get('/api/notes/:id', (req, res) => {
     }
 });
 
-// for html
+// app.get for html
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/notes.html')) 
+    res.sendFile(path.join(__dirname, './public/notes.html'))
 });
 
 app.get('/*', (req, res) => {
@@ -60,8 +78,16 @@ app.post('/api/notes', (req, res) => {
     res.json(note);
 });
 
+//app.delete
+app.delete('/api/notes/:id', (req, res) => {
+    console.log(req.params.id);
+    let result = deleteNote(req.params.id, notes);
+    res.json(result);
+});
+
 //route end
 
+//app listen
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
 });
